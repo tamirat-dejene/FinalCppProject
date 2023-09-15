@@ -1,0 +1,139 @@
+What does the acronym "URL" stand for?
+A) Universal Routing Locator
+B) Universal Resource Locator
+C) Uniform Routing Locator
+D) Uniform Resource Locator
+Answer: D) Uniform Resource Locator
+
+Which company developed the first commercially successful microprocessor?
+A) Intel
+B) Microsoft
+C) IBM
+D) Apple
+Answer: A) Intel
+
+What is the programming language used to develop Android applications?
+A) Java
+B) C++
+C) Python
+D) Ruby
+Answer: A) Java
+
+What does "HTML" stand for?
+A) Hyperlinks and Text Markup Language
+B) Hyper Text Markup Language
+C) Home Tool Markup Language
+D) High-Level Markup Language
+Answer: A) Hyper Text Markup Language
+
+Which computer programming language is often used for artificial intelligence and machine learning?
+A) Java
+B) Python
+C) C#
+D) Ruby
+Answer: B) Python
+
+What is the cloud in the context of technology?
+A) A physical storage device
+B) A network of servers
+C) A software application
+D) A type of computer processor
+Answer: B) A network of servers
+
+Which technology is used for wireless communication between devices in close proximity?
+A) Bluetooth
+B) Wi-Fi
+C) NFC (Near Field Communication)
+D) LTE (Long-Term Evolution)
+Answer: A) Bluetooth
+
+What does "IoT" stand for?
+A) Internet of Technology
+B) Internet of Things
+C) Internet on Televisions
+D) Intelligent Online Tools
+Answer: B) Internet of Things
+
+Which company developed the first graphical web browser?
+A) Microsoft
+B) IBM
+C) Apple
+D) Netscape
+Answer: D) Netscape
+
+What is the process of converting source code into machine-readable code called?
+A) Compilation
+B) Interpretation
+C) Execution
+D) Debugging
+Answer: A) Compilation
+
+What does the acronym "URL" stand for?
+A) Universal Routing Locator
+B) Universal Resource Locator
+C) Uniform Routing Locator
+D) Uniform Resource Locator
+Answer: D) Uniform Resource Locator
+
+Which company developed the first commercially successful microprocessor?
+A) Intel
+B) Microsoft
+C) IBM
+D) Apple
+Answer: A) Intel
+
+What is the programming language used to develop Android applications?
+A) Java
+B) C++
+C) Python
+D) Ruby
+Answer: A) Java
+
+What does "HTML" stand for?
+A) Hyperlinks and Text Markup Language
+B) Hyper Text Markup Language
+C) Home Tool Markup Language
+D) High-Level Markup Language
+Answer: A) Hyper Text Markup Language
+
+Which computer programming language is often used for artificial intelligence and machine learning?
+A) Java
+B) Python
+C) C#
+D) Ruby
+Answer: B) Python
+
+What is the cloud in the context of technology?
+A) A physical storage device
+B) A network of servers
+C) A software application
+D) A type of computer processor
+Answer: B) A network of servers
+
+Which technology is used for wireless communication between devices in close proximity?
+A) Bluetooth
+B) Wi-Fi
+C) NFC (Near Field Communication)
+D) LTE (Long-Term Evolution)
+Answer: A) Bluetooth
+
+What does "IoT" stand for?
+A) Internet of Technology
+B) Internet of Things
+C) Internet on Televisions
+D) Intelligent Online Tools
+Answer: B) Internet of Things
+
+Which company developed the first graphical web browser?
+A) Microsoft
+B) IBM
+C) Apple
+D) Netscape
+Answer: D) Netscape
+
+What is the process of converting source code into machine-readable code called?
+A) Compilation
+B) Interpretation
+C) Execution
+D) Debugging
+Answer: A) Compilation

@@ -1,0 +1,69 @@
+What is the difference between HTTP and HTTPS?
+A) HTTP is faster than HTTPS.
+B) HTTPS uses encryption for secure communication.
+C) HTTP is used for websites, while HTTPS is used for email.
+D) HTTPS requires a separate software installation.
+Answer: B) HTTPS uses encryption for secure communication.
+
+What is the concept of "cloud computing"?
+A) Storing data on physical servers
+B) Running programs locally on a computer
+C) Accessing resources and services over the internet
+D) Conducting weather simulations
+Answer: C) Accessing resources and services over the internet
+
+What is the difference between RAM and ROM in a computer?
+A) RAM is permanent, while ROM is volatile.
+B) RAM stores data temporarily, while ROM stores permanent data.
+C) RAM is read-only, while ROM is read-write.
+D) RAM is faster than ROM.
+Answer: B) RAM stores data temporarily, while ROM stores permanent data.
+
+What is the significance of the Turing Test in the field of artificial intelligence?
+A) It determines the speed of a computer.
+B) It evaluates a machine's ability to exhibit intelligent behavior.
+C) It measures the memory capacity of a computer.
+D) It assesses the graphical performance of a computer.
+Answer: B) It evaluates a machine's ability to exhibit intelligent behavior.
+
+What is the difference between a virus and a worm in computer security?
+A) A virus spreads through email, while a worm spreads through websites.
+B) A virus requires human action to spread, while a worm can spread automatically.
+C) A virus affects hardware, while a worm affects software.
+D) A virus is more dangerous than a worm.
+Answer: B) A virus requires human action to spread, while a worm can spread automatically.
+
+What is the role of an SSD (Solid-State Drive) in a computer?
+A) To display graphics on the screen
+B) To store data permanently
+C) To provide temporary storage for running programs
+D) To regulate the temperature of the computer
+Answer: B) To store data permanently
+
+What is the purpose of an IP address in computer networking?
+A) To determine the type of internet connection
+B) To identify the physical location of a device
+C) To encrypt internet traffic
+D) To install software updates
+Answer: B) To identify the physical location of a device
+
+What is the difference between a website and a web application?
+A) A website is accessed through a browser, while a web application requires a separate software installation.
+B) A website has interactive features, while a web application is static.
+C) A website is hosted locally, while a web application is hosted on a server.
+D) A website is used for personal purposes, while a web application is used for business purposes.
+Answer: A) A website is accessed through a browser, while a web application requires a separate software installation.
+
+What is the purpose of a VPN (Virtual Private Network)?
+A) To block unwanted advertisements
+B) To increase internet connection speed
+C) To encrypt internet traffic and enhance online privacy
+D) To detect and remove computer viruses
+Answer: C) To encrypt internet traffic and enhance online privacy
+
+What is the difference between a compiler and an interpreter?
+A) A compiler translates high-level code into machine code, while an interpreter executes code line by line.
+B) A compiler is used for web development, while an interpreter is used for mobile app development.
+C) A compiler requires an internet connection, while an interpreter does not.
+D) A compiler supports only certain programming languages, while an interpreter supports all programming languages.
+Answer: A) A compiler translates high-level code into machine code, while an interpreter executes code line by line.

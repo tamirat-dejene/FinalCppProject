@@ -1,0 +1,69 @@
+What does "HTML" stand for in web development?
+A) HyperText Markup Language
+B) High-Tech Multimedia Language
+C) Home Tool Management Language
+D) Hyperlink and Text Manipulation Language
+Answer: A) HyperText Markup Language
+
+Which social media platform is known for its 140-character limit on posts?
+A) Facebook
+B) Instagram
+C) Twitter
+D) Snapchat
+Answer: C) Twitter
+
+What is the main purpose of a firewall in computer networks?
+A) To protect against physical damage
+B) To control internet speed
+C) To filter spam emails
+D) To block unauthorized access
+Answer: D) To block unauthorized access
+
+What does the acronym "URL" stand for?
+A) Universal Resource Locator
+B) United Routing Language
+C) Uniform Resource Language
+D) User Registration Link
+Answer: A) Universal Resource Locator
+
+What is the file extension for a Microsoft Word document?
+A) .docx
+B) .txt
+C) .pdf
+D) .xls
+Answer: A) .docx
+
+Which programming language is widely used for building websites?
+A) Python
+B) Java
+C) HTML
+D) C++
+Answer: C) HTML
+
+What is the purpose of a browser in internet browsing?
+A) To display web pages
+B) To protect against malware
+C) To manage email accounts
+D) To create spreadsheets
+Answer: A) To display web pages
+
+What is the function of an operating system in a computer?
+A) To connect to the internet
+B) To run software applications
+C) To perform mathematical calculations
+D) To organize files in a folder
+Answer: B) To run software applications
+
+Which technology allows wireless communication between devices over short distances?
+A) Bluetooth
+B) Wi-Fi
+C) Ethernet
+D) USB
+Answer: A) Bluetooth
+
+What is the purpose of a search engine?
+A) To store files on a computer
+B) To connect to social media platforms
+C) To browse websites
+D) To find information on the internet
+Answer: D) To find information on the internet
