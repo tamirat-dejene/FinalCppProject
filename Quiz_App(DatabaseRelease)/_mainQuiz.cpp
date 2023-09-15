@@ -4,7 +4,6 @@
 #include <vector>
 #include <chrono>
 
-
 #include <mysql_driver.h>
 #include <mysql_connection.h>
 #include <cppconn/exception.h>
@@ -42,7 +41,6 @@ public:
     void encrypt_password(string&);
     void reset_password();
     void delete_account();
-    string getId();
 };
 
 
@@ -59,17 +57,13 @@ public:
     void prprdstmt_insertion(ifstream&, string, string);
     void fetch_question();
     void display_question(int);
-    /*void create_scoreb();
-    void save_sb();
-    void reset_sb();
-    void display_sb();*/
 };
+
 int home_page();
 char home_p2();
 void about_us();
 void exit_from_app();
 char manage_account();
-
 
 int main() {
     connect_tomySQL();  // Connect to the database every time the programs is launched
@@ -78,28 +72,38 @@ Home:
     switch (home_page()) {
     case 1: U.log_in(); break;
     case 2: U.create_new_user(); break;
-    case 3: exit_from_app();
+    case 3: about_us(); 
+        cout << "Press any key to go back";
+        system("pause>0");
+        goto Home;
+    case 4: exit_from_app();
     }
+Home2: 
     switch (home_p2()) {
     case 'a': goto Home; break;
     case 'b': quiz = 'b'; break;
     case 'c':
         switch (manage_account()) {
-        case 'a': U.reset_password(); break;
-        case 'b': U.delete_account(); break;
+        case 'a': U.reset_password();
+            goto Home2;
+        case 'b': U.delete_account(); 
+            goto Home2;
+            break;
         }
         break;
-    case 'd': about_us(); break;
-    case 'e': exit_from_app();
+    case 'd': exit_from_app();
     }
     if (quiz == 'b') {
         switch (Q.show_main_menu()) {
         case 'a':
-            Q.store_question(); Q.fetch_question(); break;
-        case 'b': break;
-        case 'c': break;
-        case 'd': goto Home;
-        case 'e': exit_from_app();
+            //Q.store_question(); 
+             Q.fetch_question();
+            cout << "Press any key to go back";
+            system("pause>0");
+            goto Home2;
+        case 'b':
+            goto Home;
+        case 'c': exit_from_app();
         }
     }
     system("pause>0");
@@ -127,41 +131,48 @@ int home_page() {
     cout << "+--------------------------------------+\n";
     cout << "               1. Log In   \n";
     cout << "               2. Sign Up  \n";
-    cout << "               3. Exit  ";
+    cout << "               3. About us \n";
+    cout << "               4. Exit  ";
 a:  cin >> choice;
-    if (choice != 1 && choice != 2 && choice != 3) {
+    if (choice != 1 && choice != 2 && choice != 3 && choice != 4) {
         cout << "INVALID INPUT RETRY: "; goto a;
     }
     return choice;
 }
 char home_p2() {
     char ch;
+    system("CLS");
     cout << " ---- Choose your next move ----\n";
     cout << "  Back to main menu. a\n";
     cout << "    Proceed to quiz. b\n";
     cout << "     Manage account. c\n";
-    cout << "           About us. d\n";
-    cout << "               Exit. e "; K: cin >> ch; ch = tolower(ch);
-    if (ch != 'a' && ch != 'b' && ch != 'c' && ch != 'd' && ch != 'e') goto K;
+    cout << "               Exit. d "; K: cin >> ch; ch = tolower(ch);
+    if (ch != 'a' && ch != 'b' && ch != 'c' && ch != 'd') goto K;
     return ch;
+}
+char manage_account() {
+    char choose;
+    system("CLS");
+    cout << "+----------------------+\n";
+    cout << "   a. Change password\n";
+    cout << "   b. Delete account\n";
+    cout << "+----------------------+> "; k: cin >> choose; choose = tolower(choose);
+    if (choose != 'a' && choose != 'b') goto k;
+    return choose;
 }
 char Question::show_main_menu() {
     system("CLS");
     char ch;
     cout << "-- Quiz and Related Utilities --\n";
     cout << "--------------------------------\n";
-    cout << "     a. Take Quiz\n";
-    cout << "     b. Show My Scoreboard\n";
-    cout << "     c. Reset Scoreboard\n";
-    cout << "     d. Back to home page\n";
-    cout << "     e. Exit\n"; back: cin >> ch; ch = tolower(ch);
-    if (ch != 'a' && ch != 'b' && ch != 'c' && ch != 'd') goto back;
+    cout << "     a. Take quiz\n";
+    cout << "     b. Back to homepage\n";
+    cout << "     c. Exit\n"; back: cin >> ch; ch = tolower(ch);
+    if (ch != 'a' && ch != 'b' && ch != 'c') goto back;
     system("CLS");
     return ch;
 }
-string User::getId() {
-    return id_number;
-}
+
 void User::create_new_user() {
 Home:   system("CLS");
     cout << "          Fill out the following form\n";
@@ -268,7 +279,7 @@ Home:
                 cout << "Incorrect password!\n";
                 cout << "  a. Reset password\n";
                 cout << "  b. Retry \n"; cin >> x;
-                if (x == tolower(x)) reset_password();
+                if (tolower(x) == 'a') reset_password();
                 else goto Home;
             }
         }
@@ -293,14 +304,17 @@ void User::reset_password() {
     cout << "Enter current password: "; cin.ignore(); getline(cin, passw); encrypt_password(passw);
     if (check_password(passw)) {
         cout << "Enter new password: "; getline(cin, User::password);
-
-        string queryUser = "UPDATE user SET password = '" + passw + "' WHERE id_num = '" + id_number + "';";
+        encrypt_password(password);
+        string queryUser = "UPDATE user SET password = '" + password + "' WHERE id_num = '" + id_number + "';";
 
         stmt = con->createStatement();
         try {
             stmt->execute(queryUser);
             system("CLS");
-            cout << "Password reset successful!";
+            cout << "Password reset successful!\n";
+            cout << "Press any key to go back";
+            system("pause>0");
+            system("CLS");
         }
         catch (sql::SQLException& e) {
             std::cerr << "Database error: " << e.what() << endl;
@@ -329,7 +343,10 @@ void User::delete_account() {
         try {
             stmt->execute(queryUser);
             system("CLS");
-            cout << "Account deleted!";
+            cout << "Account deleted!\n";
+            cout << "Press any key to go back";
+            system("pause>0");
+            system("CLS");
         }
         catch (sql::SQLException& e) {
             std::cerr << "Database error: " << e.what() << endl;
@@ -487,9 +504,13 @@ void Question::display_question(int noq) {
     chrono::duration<double> duration = end - start;
     double timeElapsed = duration.count();
 
-    cout << "Score: " << correct << "/" << noq << endl;
-    cout << "Time: " << timeElapsed << "secs" << endl;
-
+    system("CLS");
+    cout << "+-----------------------------------+\n";
+    cout << "Score: " << correct << "/" << noq << " : ";
+    if (float(correct) / noq >= 0.5)cout << "You did good!\n";
+    else cout << "You should work hard!\n";
+    cout << "Time taken: " << timeElapsed << "secs" << endl;
+    cout << "+-----------------------------------+\n";
     question_number.clear();
     quest.clear();
     choice_a.clear();
@@ -573,7 +594,6 @@ void Question::prprdstmt_insertion(ifstream& qFile, string categ, string level) 
     }
 }
 
-
 void about_us() {
     system("CLS");
     cout << "+-------------------------------------------------+\n";
@@ -585,22 +605,13 @@ void about_us() {
     cout << " Tadios    Dejene                      ETS1522/14\n";
     cout << " Tebarek   Shemsu                      ETS1526/14\n";
     cout << " Yohannes Tigistu                      ETS1703/14\n";
-    cout << "+-------------------------------------------------+";
+    cout << " \n\n                All rights reserved         \n";
+    cout << "+-------------------------------------------------+\n";
 }
 void exit_from_app() {
     system("CLS");
-    cout << "Thanks for using QuizApp\n";
+    cout << " --------- Thanks for using QuizApp --------\n";
     cout << "Press and key to proceed!";
     system("pause>0");
     exit(1);
-}
-char manage_account() {
-    char choose;
-    system("CLS");
-    cout << "+----------------------+\n";
-    cout << "   a. Reset password\n";
-    cout << "   b. Delete account\n";
-    cout << "+----------------------+> "; k: cin >> choose; choose = tolower(choose);
-    if (choose != 'a' && choose != 'b') goto k;
-    return choose;
 }
