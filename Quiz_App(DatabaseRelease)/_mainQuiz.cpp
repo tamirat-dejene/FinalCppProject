@@ -16,7 +16,7 @@ using namespace mysql;
 
 const char* server = "tcp://127.0.0.1:3306";
 const char* username = "root";
-const char* password = "tamirat.mySQL";
+const char* password = "*********";
 const char* database = "quiz_application_db";  // Name of the database to be created
 
 MySQL_Driver* driver;
