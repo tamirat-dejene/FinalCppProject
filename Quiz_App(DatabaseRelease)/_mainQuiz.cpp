@@ -16,7 +16,7 @@ using namespace mysql;
 
 const char* server = "tcp://127.0.0.1:3306";
 const char* username = "root";
-const char* password = "*********";
+const char* password = "***********";
 const char* database = "quiz_application_db";  // Name of the database to be created
 
 MySQL_Driver* driver;
@@ -39,12 +39,6 @@ public:
         last_name("--"), email_address("--.--@--"),
         user_name("--"), password("---"){
         //Default constructor
-    }
-    User(string& id, string& fn, string& ln, string& ea, string& un, string& pw) : 
-        id_number(id), first_name(fn),
-        last_name(ln), email_address(ea), 
-        user_name(un), password(pw) {
-        //Constructor to initialize member variables
     }
 
     //Setters meths to set value of data
@@ -85,6 +79,7 @@ public:
     void fetch_question();
     void display_question(int);
 };
+// Global user and question instance
 
 int home_page();
 char home_p2();
@@ -95,6 +90,7 @@ char manage_account();
 int main() {
     connect_tomySQL();  // Connect to the database every time the programs is launched
     User U; Question Q; char quiz = 'k';
+
 Home:
     switch (home_page()) {
     case 1: U.log_in(); break;
@@ -202,19 +198,16 @@ char Question::show_main_menu() {
 
 void User::create_new_user() {
 Home:   system("CLS");
-    string fn, ln, ea, idn, pwd, un;
     cout << "          Fill out the following form\n";
     cout << "+---------------------------------------------+\n";
-    cout << "    First name   : "; cin.ignore(); getline(cin, fn);
-    cout << "    Last name    : "; getline(cin, ln);
-    cout << "    Email address: "; getline(cin, ea);
-    cout << "    ID number    : "; getline(cin, idn);
-    cout << "        Create name : "; getline(cin, un);
-    cout << "        Password    : "; getline(cin, pwd);
+    cout << "    First name   : "; cin.ignore(); getline(cin, first_name);
+    cout << "    Last name    : "; getline(cin, last_name);
+    cout << "    Email address: "; getline(cin, email_address);
+    cout << "    ID number    : "; getline(cin, id_number);
+    cout << "    Create user name : "; getline(cin, user_name);
+    cout << "           password  : "; getline(cin, password);
     cout << "+---------------------------------------------+\n";
-    encrypt_password(pwd);  // Encrypting the password to store
-    User tempUser(idn, fn, ln, ea, un, pwd); // Initialize the member variables
-
+    encrypt_password(password);  // Encrypting the password to store
     if (con->isValid()) {
         stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS " + string(database)); // Creating if didn't exist
@@ -253,6 +246,9 @@ Home:   system("CLS");
             system("CLS");
             cout << "   You have successfully created  your account.\n";
             cout << "Logged in as new user: --- " << get_id_number() << " ---\n";
+            cout << " --- Press any key to continue";
+            delete stmt;
+            system("pause>0");
         }
         catch (sql::SQLException& e) {
             if (e.getErrorCode() == 1062) { // Duplicate username
@@ -268,7 +264,6 @@ Home:   system("CLS");
                 goto Home;
             }
         }
-        delete con;
     }
     else {
         cout << "System error! Try again later.\n Press any key to exit";
@@ -285,6 +280,7 @@ Home:
     cout << "  Enter  password : "; getline(cin, runtime_pass);
     encrypt_password(runtime_pass);
 
+
     stmt = con->createStatement();
     string queryUser = "SELECT * FROM user WHERE user_name = '" + runtime_uname + "';";
     try {
@@ -293,7 +289,6 @@ Home:
             string fname, lname, idn, emaail, pass, usern;
             User::password = result->getString("password");
             if (check_password(runtime_pass)) {
-                // Can use setter here, but instead
                 first_name = result->getString("f_name");
                 last_name= result->getString("l_name");
                 email_address = result->getString("email");
@@ -303,6 +298,7 @@ Home:
 
                 system("CLS");
                 cout << "Successfully logged in as ------ " << id_number << " -----\n";
+                cout << "-- Press any key to continue"; system("pause>0");
             }
             else {
                 system("CLS");
@@ -538,12 +534,12 @@ void Question::display_question(int noq) {
     double timeElapsed = duration.count();
 
     system("CLS");
-    cout << "+-----------------------------------+\n";
+    cout << "+------------------------------+\n";
     cout << "Score: " << correct << "/" << noq << " : ";
     if (float(correct) / noq >= 0.5)cout << "You did good!\n";
     else cout << "You should work hard!\n";
     cout << "Time taken: " << timeElapsed << "secs" << endl;
-    cout << "+-----------------------------------+\n";
+    cout << "+------------------------------+\n";
     question_number.clear();
     quest.clear();
     choice_a.clear();
