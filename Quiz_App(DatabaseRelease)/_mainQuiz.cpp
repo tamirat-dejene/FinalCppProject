@@ -181,8 +181,8 @@ Home:   system("CLS");
     cout << "    Last name    : "; getline(cin, last_name);
     cout << "    Email address: "; getline(cin, email_address);
     cout << "    ID number    : "; getline(cin, id_number);
-    cout << "        Create name : "; getline(cin, user_name);
-    cout << "        Password    : "; getline(cin, password);
+    cout << "        Create user name : "; getline(cin, user_name);
+    cout << "                Password : "; getline(cin, password);
     cout << "+---------------------------------------------+\n";
     encrypt_password(password);
 
