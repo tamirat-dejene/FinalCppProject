@@ -33,8 +33,37 @@ private:
         last_name,
         email_address,
         user_name,
-        password = "";
+        password;
 public:
+    User() : id_number("--"), first_name("--"),
+        last_name("--"), email_address("--.--@--"),
+        user_name("--"), password("---"){
+        //Default constructor
+    }
+    User(string& id, string& fn, string& ln, string& ea, string& un, string& pw) : 
+        id_number(id), first_name(fn),
+        last_name(ln), email_address(ea), 
+        user_name(un), password(pw) {
+        //Constructor to initialize member variables
+    }
+
+    //Setters meths to set value of data
+    void set_id_number(string id) { id_number = id; }
+    void set_first_name(string fn) { first_name = fn; }
+    void set_last_name(string ln) { last_name = ln; }
+    void set_email(string em) { email_address = em; }
+    void set_user_name(string un) { user_name = un; }
+    void set_password(string pas) { password = pas; }
+
+    //Getters to access data value
+    string get_id_number() { return id_number; }
+    string get_first_name() { return first_name; }
+    string get_last_name() { return last_name; }
+    string get_email() { return email_address; }
+    string get_user_name() { return user_name; }
+    string get_password() { return password; }
+
+    //Member functions
     void create_new_user();
     void log_in();
     bool check_password(string);
@@ -42,8 +71,6 @@ public:
     void reset_password();
     void delete_account();
 };
-
-
 class Question : public User {
 private:
     string category, level;
@@ -175,16 +202,18 @@ char Question::show_main_menu() {
 
 void User::create_new_user() {
 Home:   system("CLS");
+    string fn, ln, ea, idn, pwd, un;
     cout << "          Fill out the following form\n";
     cout << "+---------------------------------------------+\n";
-    cout << "    First name   : "; cin.ignore(); getline(cin, first_name);
-    cout << "    Last name    : "; getline(cin, last_name);
-    cout << "    Email address: "; getline(cin, email_address);
-    cout << "    ID number    : "; getline(cin, id_number);
-    cout << "        Create name : "; getline(cin, user_name);
-    cout << "        Password    : "; getline(cin, password);
+    cout << "    First name   : "; cin.ignore(); getline(cin, fn);
+    cout << "    Last name    : "; getline(cin, ln);
+    cout << "    Email address: "; getline(cin, ea);
+    cout << "    ID number    : "; getline(cin, idn);
+    cout << "        Create name : "; getline(cin, un);
+    cout << "        Password    : "; getline(cin, pwd);
     cout << "+---------------------------------------------+\n";
-    encrypt_password(password);
+    encrypt_password(pwd);  // Encrypting the password to store
+    User tempUser(idn, fn, ln, ea, un, pwd); // Initialize the member variables
 
     if (con->isValid()) {
         stmt = con->createStatement();
@@ -212,18 +241,18 @@ Home:   system("CLS");
             goto Home;
         }
         pstmt = con->prepareStatement("INSERT INTO user(id_num, f_name, l_name, email, user_name, password) VALUES(?,?,?,?,?,?)");
-        pstmt->setString(1, id_number);
-        pstmt->setString(2, first_name);
-        pstmt->setString(3, last_name);
-        pstmt->setString(4, email_address);
-        pstmt->setString(5, user_name);
-        pstmt->setString(6, password);
+        pstmt->setString(1, get_id_number());
+        pstmt->setString(2, get_first_name());
+        pstmt->setString(3, get_last_name());
+        pstmt->setString(4, get_email());
+        pstmt->setString(5, get_user_name());
+        pstmt->setString(6, get_password());
 
         try { 
             pstmt->execute(); 
             system("CLS");
             cout << "   You have successfully created  your account.\n";
-            cout << "Logged in as new user: --- " << id_number << " ---\n";
+            cout << "Logged in as new user: --- " << get_id_number() << " ---\n";
         }
         catch (sql::SQLException& e) {
             if (e.getErrorCode() == 1062) { // Duplicate username
@@ -264,12 +293,14 @@ Home:
             string fname, lname, idn, emaail, pass, usern;
             User::password = result->getString("password");
             if (check_password(runtime_pass)) {
+                // Can use setter here, but instead
                 first_name = result->getString("f_name");
                 last_name= result->getString("l_name");
                 email_address = result->getString("email");
                 User::id_number = result->getString("id_num");
                 user_name = result->getString("user_name");
-                User::password = runtime_pass;
+                set_password(runtime_pass);
+
                 system("CLS");
                 cout << "Successfully logged in as ------ " << id_number << " -----\n";
             }
@@ -303,7 +334,9 @@ void User::reset_password() {
     string passw;
     cout << "Enter current password: "; cin.ignore(); getline(cin, passw); encrypt_password(passw);
     if (check_password(passw)) {
-        cout << "Enter new password: "; getline(cin, User::password);
+        cout << "Enter new password: "; getline(cin, passw);
+
+        set_password(passw);
         encrypt_password(password);
         string queryUser = "UPDATE user SET password = '" + password + "' WHERE id_num = '" + id_number + "';";
 
