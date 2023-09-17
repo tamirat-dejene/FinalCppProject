@@ -656,13 +656,12 @@ void exit_from_app() {
     system("CLS");
     cout << " --------- Thanks for using QuizApp --------\n";
     cout << "Press and key to proceed!";
-    system("pause");
+    system("pause>0");
     if(stmt != NULL)
         delete ::stmt;
     if(con != NULL)
         delete ::con;
     if(result != NULL)
         delete ::result;
-    system("pause");
     exit(1);
 }
