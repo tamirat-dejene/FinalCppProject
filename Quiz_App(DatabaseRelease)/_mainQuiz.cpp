@@ -16,7 +16,7 @@ using namespace mysql;
 
 const char* server = "tcp://127.0.0.1:3306";
 const char* username = "root";
-const char* password = "***********";
+const char* password = "*********";
 const char* database = "quiz_application_db";  // Name of the database to be created
 
 MySQL_Driver* driver;
@@ -79,7 +79,6 @@ public:
     void fetch_question();
     void display_question(int);
 };
-// Global user and question instance
 
 int home_page();
 char home_p2();
@@ -108,9 +107,9 @@ Home2:
     case 'c':
         switch (manage_account()) {
         case 'a': U.reset_password();
-            goto Home2;
+            goto Home;
         case 'b': U.delete_account(); 
-            goto Home2;
+            goto Home;
             break;
         }
         break;
