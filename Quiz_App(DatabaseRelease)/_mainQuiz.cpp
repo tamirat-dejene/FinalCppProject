@@ -17,7 +17,7 @@ using namespace mysql;
 
 const char* server = "tcp://127.0.0.1:3306"; //Ip address of the server running on local
 const char* username = "root";
-const char* password = "*********"; //root user password
+string passward = "**********"; //root user password
 const char* database = "quiz_application_db";  // Name of the database to be created
 
 //Pointer objects to controll the activity
@@ -63,6 +63,7 @@ public:
     //Member functions
     void create_new_user();  // to create new user
     void log_in(); // To initialize login session
+    bool check_email_id(string); // checks the authenticity of the email user enters
     bool check_password(string); // Checks whether the entered password is correct
     void encrypt_password(string&); // Encrypt the password before storing
     void reset_password(); // To chnage password
@@ -135,16 +136,18 @@ Home2:
     return 0;
 }
 void connect_tomySQL() {
+    cout << "Enter server password: "; getline(cin, ::passward);
     try
     {
         driver = get_mysql_driver_instance(); // Establish connection to MySQL Server
-        con = driver->connect(server, username, password);
+        con = driver->connect(server, username, passward);
         con->setSchema(database); // setting the schema to the new database
     }
     catch (sql::SQLException& e)
     {
-        cout << "Could not connect to server. Error message: " << e.what() << endl;
-        system("pause");
+        cout << "Could not connect to server. \nError message: " << e.what() << endl;
+        cout << "Incorrect Server Password is provided! Press any key to exit!";
+        system("pause>0");
         exit(1);
     }
 }
@@ -298,6 +301,7 @@ Home:
         if (result->next()) {
             string fname, lname, idn, emaail, pass, usern;
             User::password = result->getString("password");
+            User::email_address = result->getString("email");
             if (check_password(runtime_pass)) {
                 // Calling methods to fetch data from the database 
                 first_name = result->getString("f_name");
@@ -338,17 +342,18 @@ Home:
 }
 
 void User::reset_password() {
-    string passw;
-    cout << "Enter current password: "; cin.ignore(); getline(cin, passw); encrypt_password(passw);
-    if (check_password(passw)) {
+    string emailid, passw;
+    cout << "Enter email attached to your account: "; cin.ignore(); getline(cin, emailid);
+    if (check_email_id(emailid)) {
         cout << "Enter new password: "; getline(cin, passw);
 
         // setter set_password()
         set_password(passw);
+       // User::password = passw;
         encrypt_password(password);
 
         //query tobe executed
-        string queryUser = "UPDATE user SET password = '" + password + "' WHERE id_num = '" + id_number + "';";
+        string queryUser = "UPDATE user SET password = '" + password + "' WHERE email = '" + emailid + "';";
         stmt = con->createStatement();
         try {
             stmt->execute(queryUser);
@@ -363,6 +368,11 @@ void User::reset_password() {
             system("pause");
             exit(1);
         }
+    }
+    else {
+        cout << "Incorrect email is provided! -- Retry later!\n";
+        cout << "Press any key to exit."; system("pause>0");
+        exit(1);
     }
 
 }
@@ -398,6 +408,20 @@ void User::delete_account() {
     }
 }
 
+bool User::check_email_id(string rtemail) {
+    bool length_check = false;
+    bool char_check = true;
+    if (rtemail.length() == User::email_address.length()) {
+        length_check = true;
+        for (int i = 0; i < rtemail.length(); ++i) {
+            if (rtemail[i] != User::email_address[i]) {
+                char_check = false;
+                break;
+            }
+        }
+    }
+    return (char_check && length_check);
+}
 bool User::check_password(string pass) {
     bool length_check = false;
     bool char_check = true;
