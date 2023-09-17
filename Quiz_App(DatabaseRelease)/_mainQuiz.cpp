@@ -10,38 +10,41 @@
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
 
+// Namespaces used from the library
 using namespace std;
 using namespace sql;
 using namespace mysql;
 
-const char* server = "tcp://127.0.0.1:3306";
+const char* server = "tcp://127.0.0.1:3306"; //Ip address of the server running on local
 const char* username = "root";
-const char* password = "*********";
+const char* password = "*********"; //root user password
 const char* database = "quiz_application_db";  // Name of the database to be created
 
-MySQL_Driver* driver;
-Connection* con;
+//Pointer objects to controll the activity
+MySQL_Driver* driver; 
+Connection* con; // Establish connection, execute queries
 Statement* stmt;
-ResultSet* result;
-PreparedStatement* pstmt;
-void connect_tomySQL();
+ResultSet* result; // Handles results of the executed queries
+PreparedStatement* pstmt; //to use stored procedures/ functions of mysql
+void connect_tomySQL(); //Function to connect to the server
 
 class User {
 private:
-    string id_number,
-        first_name,
-        last_name,
+    string id_number, // User's Id number
+        first_name, // User's first name
+        last_name, //User's last name
         email_address,
         user_name,
         password;
 public:
+    // Public default constructor 
     User() : id_number("--"), first_name("--"),
         last_name("--"), email_address("--.--@--"),
         user_name("--"), password("---"){
         //Default constructor
     }
 
-    //Setters meths to set value of data
+    //Setter methods to set value of data
     void set_id_number(string id) { id_number = id; }
     void set_first_name(string fn) { first_name = fn; }
     void set_last_name(string ln) { last_name = ln; }
@@ -49,7 +52,7 @@ public:
     void set_user_name(string un) { user_name = un; }
     void set_password(string pas) { password = pas; }
 
-    //Getters to access data value
+    //Getters to access private data member
     string get_id_number() { return id_number; }
     string get_first_name() { return first_name; }
     string get_last_name() { return last_name; }
@@ -58,30 +61,31 @@ public:
     string get_password() { return password; }
 
     //Member functions
-    void create_new_user();
-    void log_in();
-    bool check_password(string);
-    void encrypt_password(string&);
-    void reset_password();
-    void delete_account();
+    void create_new_user();  // to create new user
+    void log_in(); // To initialize login session
+    bool check_password(string); // Checks whether the entered password is correct
+    void encrypt_password(string&); // Encrypt the password before storing
+    void reset_password(); // To chnage password
+    void delete_account(); //Remove account
 };
 class Question : public User {
 private:
-    string category, level;
-    vector<string> quest, choice_a, choice_b, choice_c, choice_d;
-    vector<char> correct_answer;
-    vector<int> question_id, question_number;
+    string category, level;//Category and level(Easy, Medium, Hard)
+    vector<string> quest, choice_a, choice_b, choice_c, choice_d; //String vector of questions and their corresponding choices
+    vector<char> correct_answer; //Vector of correct answers for the question
+    vector<int> question_id, question_number; //
 public:
-    char show_main_menu();
-    void store_question();
-    void write_to_the_database();
-    void prprdstmt_insertion(ifstream&, string, string);
-    void fetch_question();
-    void display_question(int);
+    char show_main_menu(); //Display question options
+    void store_question(); //Stores the  question from the text file in the class's data memeber
+    void write_to_the_database(); // Writes to the database from the class data members
+    void prprdstmt_insertion(ifstream&, string, string); //Executes the query used to write into the database
+    void fetch_question(); //Reads question as needed from the database
+    void display_question(int); //Displays the question
 };
 
-int home_page();
-char home_p2();
+// Function declaration
+int home_page(); //Initial page to be displayed
+char home_p2(); 
 void about_us();
 void exit_from_app();
 char manage_account();
@@ -89,7 +93,6 @@ char manage_account();
 int main() {
     connect_tomySQL();  // Connect to the database every time the programs is launched
     User U; Question Q; char quiz = 'k';
-
 Home:
     switch (home_page()) {
     case 1: U.log_in(); break;
@@ -134,7 +137,7 @@ Home2:
 void connect_tomySQL() {
     try
     {
-        driver = get_mysql_driver_instance();
+        driver = get_mysql_driver_instance(); // Establish connection to MySQL Server
         con = driver->connect(server, username, password);
         con->setSchema(database); // setting the schema to the new database
     }
@@ -207,11 +210,14 @@ Home:   system("CLS");
     cout << "           password  : "; getline(cin, password);
     cout << "+---------------------------------------------+\n";
     encrypt_password(password);  // Encrypting the password to store
+
+    // Method isValid() - to check whether the connection is live
     if (con->isValid()) {
         stmt = con->createStatement();
         stmt->execute("CREATE DATABASE IF NOT EXISTS " + string(database)); // Creating if didn't exist
         con->setSchema(database); // setting the schema to the new database
 
+        // SQL queries to be executed
         vector<string> line;
         line.push_back("CREATE TABLE IF NOT EXISTS user ");
         line.push_back("(id_num VARCHAR(20) PRIMARY KEY, ");
@@ -232,6 +238,8 @@ Home:   system("CLS");
             cout << "All fields should be filled! Press any key to retry."; system("pause>0");
             goto Home;
         }
+
+        //Using stored procedure 
         pstmt = con->prepareStatement("INSERT INTO user(id_num, f_name, l_name, email, user_name, password) VALUES(?,?,?,?,?,?)");
         pstmt->setString(1, get_id_number());
         pstmt->setString(2, get_first_name());
@@ -239,6 +247,7 @@ Home:   system("CLS");
         pstmt->setString(4, get_email());
         pstmt->setString(5, get_user_name());
         pstmt->setString(6, get_password());
+        
 
         try { 
             pstmt->execute(); 
@@ -249,6 +258,7 @@ Home:   system("CLS");
             delete stmt;
             system("pause>0");
         }
+        //Handle exceptions 
         catch (sql::SQLException& e) {
             if (e.getErrorCode() == 1062) { // Duplicate username
                 std::cout << "User name/ID already exists! Try again." << endl;
@@ -279,15 +289,17 @@ Home:
     cout << "  Enter  password : "; getline(cin, runtime_pass);
     encrypt_password(runtime_pass);
 
-
+    //Pointer object calling the method to create statement
     stmt = con->createStatement();
     string queryUser = "SELECT * FROM user WHERE user_name = '" + runtime_uname + "';";
     try {
+        // Object of she ResultSet class 
         result = stmt->executeQuery(queryUser);
         if (result->next()) {
             string fname, lname, idn, emaail, pass, usern;
             User::password = result->getString("password");
             if (check_password(runtime_pass)) {
+                // Calling methods to fetch data from the database 
                 first_name = result->getString("f_name");
                 last_name= result->getString("l_name");
                 email_address = result->getString("email");
@@ -317,7 +329,7 @@ Home:
             exit(1);
         }
         delete stmt;
-        delete result;
+        delete result; // freeing the memory explicitly
     }
     catch (sql::SQLException& e) {
         // Handle database error
@@ -331,10 +343,12 @@ void User::reset_password() {
     if (check_password(passw)) {
         cout << "Enter new password: "; getline(cin, passw);
 
+        // setter set_password()
         set_password(passw);
         encrypt_password(password);
-        string queryUser = "UPDATE user SET password = '" + password + "' WHERE id_num = '" + id_number + "';";
 
+        //query tobe executed
+        string queryUser = "UPDATE user SET password = '" + password + "' WHERE id_num = '" + id_number + "';";
         stmt = con->createStatement();
         try {
             stmt->execute(queryUser);
@@ -548,6 +562,7 @@ void Question::display_question(int noq) {
 }
 
 void Question::write_to_the_database() {
+    //Opening the required text file to copy data to the database
     ifstream qFile;
     category = "Science";
     level = "Easy"; qFile.open("questionBank/sciEasy.txt", ios::_Nocreate);
@@ -592,6 +607,7 @@ void Question::prprdstmt_insertion(ifstream& qFile, string categ, string level) 
     if (qFile.is_open()) {
         pstmt = con->prepareStatement(command);
         int quest_n = 1;
+        //Looping through the text file
         while (!qFile.eof()) {
             pstmt->setInt(1, quest_n);
             pstmt->setString(2, category);
@@ -640,6 +656,13 @@ void exit_from_app() {
     system("CLS");
     cout << " --------- Thanks for using QuizApp --------\n";
     cout << "Press and key to proceed!";
-    system("pause>0");
+    system("pause");
+    if(stmt != NULL)
+        delete ::stmt;
+    if(con != NULL)
+        delete ::con;
+    if(result != NULL)
+        delete ::result;
+    system("pause");
     exit(1);
 }
