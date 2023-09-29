@@ -1,10 +1,12 @@
 # FinalCppProject
 - --------------------------------------------- -
+## The first project
 Quiz_App(with txt file) is built first which inludes:
 header files: 'user.h' and 'question.h'
 with implemetaton files: _mainQuiz.cpp, _question.cpp and _user.cpp which include many different functions.
 The manual is inluded in the directory.
 
+## Updated release
 Final C++ Project Integrated with MySQL Database connector 
 Built with Microsoft Visual Studio 2022 
 Used MySQLConnector/C++ 8.1.0 Release Version
