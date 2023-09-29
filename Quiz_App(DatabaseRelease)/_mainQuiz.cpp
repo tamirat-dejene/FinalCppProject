@@ -122,7 +122,7 @@ Home2:
         quiz = 'k';
         switch (Q.show_main_menu()) {
         case 'a':
-             Q.store_question(); 
+             //Q.store_question(); 
              Q.fetch_question();
             cout << "Press any key to go back";
             system("pause>0");
