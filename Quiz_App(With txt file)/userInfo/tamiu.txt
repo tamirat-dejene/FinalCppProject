@@ -1,6 +1,6 @@
 Name: Tamirat Dejenie
-Email: tdejenie001@gmail.com
+Email: tamirat.dejenie@gmail.com
 Password: WXYZ
 Type: Student
 
-Cat - A : D-level - 1 : Score - 2/2 : Time - 3.67637 sec
+Cat - E : D-level - 2 : Score - 1/3 : Time - 24.0442 sec

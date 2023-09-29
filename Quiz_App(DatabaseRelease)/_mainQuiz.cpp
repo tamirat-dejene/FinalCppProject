@@ -9,7 +9,6 @@
 #include <cppconn/exception.h>
 #include <cppconn/prepared_statement.h>
 #include <cppconn/resultset.h>
-
 // Namespaces used from the library
 using namespace std;
 using namespace sql;
@@ -20,7 +19,7 @@ const char* username = "root";
 string passward = "**********"; //root user password
 const char* database = "quiz_application_db";  // Name of the database to be created
 
-//Pointer objects to controll the activity
+//Pointer objects to control the activity
 MySQL_Driver* driver; 
 Connection* con; // Establish connection, execute queries
 Statement* stmt;
@@ -120,9 +119,10 @@ Home2:
     case 'd': exit_from_app();
     }
     if (quiz == 'b') {
+        quiz = 'k';
         switch (Q.show_main_menu()) {
         case 'a':
-            //Q.store_question(); 
+             Q.store_question(); 
              Q.fetch_question();
             cout << "Press any key to go back";
             system("pause>0");
@@ -130,7 +130,7 @@ Home2:
         case 'b':
             goto Home;
         case 'c': exit_from_app();
-        }
+        }   
     }
     system("pause>0");
     return 0;
@@ -139,9 +139,11 @@ void connect_tomySQL() {
     cout << "Enter server password: "; getline(cin, ::passward);
     try
     {
+        //stmt = con->createStatement();
         driver = get_mysql_driver_instance(); // Establish connection to MySQL Server
         con = driver->connect(server, username, passward);
-        con->setSchema(database); // setting the schema to the new database
+        //stmt->execute("CREATE DATABASE IF NOT EXISTS " + string(database)); // Creating if didn't exist database: quiz_application_db
+        con->setSchema(database); // setting the schema to the new database i.e.(By SQL): USE quiz_application_db;
     }
     catch (sql::SQLException& e)
     {
@@ -217,7 +219,7 @@ Home:   system("CLS");
     // Method isValid() - to check whether the connection is live
     if (con->isValid()) {
         stmt = con->createStatement();
-        stmt->execute("CREATE DATABASE IF NOT EXISTS " + string(database)); // Creating if didn't exist
+        stmt->execute("CREATE DATABASE IF NOT EXISTS " + string(database)); // Creating if didn't exist database: quiz_application_db
         con->setSchema(database); // setting the schema to the new database
 
         // SQL queries to be executed
@@ -242,9 +244,10 @@ Home:   system("CLS");
             goto Home;
         }
 
-        //Using stored procedure 
+        //Using stored procedure //the method used to insert values into the database table we just created
+        // using placeholder
         pstmt = con->prepareStatement("INSERT INTO user(id_num, f_name, l_name, email, user_name, password) VALUES(?,?,?,?,?,?)");
-        pstmt->setString(1, get_id_number());
+        pstmt->setString(1, get_id_number()); // setString method: helps to fill the first placeholder quest mark
         pstmt->setString(2, get_first_name());
         pstmt->setString(3, get_last_name());
         pstmt->setString(4, get_email());
@@ -263,7 +266,7 @@ Home:   system("CLS");
         }
         //Handle exceptions 
         catch (sql::SQLException& e) {
-            if (e.getErrorCode() == 1062) { // Duplicate username
+            if (e.getErrorCode() == 1062) { // Duplicate username //the number(error code) is used commonly same
                 std::cout << "User name/ID already exists! Try again." << endl;
                 goto Home;
             }
@@ -304,7 +307,7 @@ Home:
             User::email_address = result->getString("email");
             if (check_password(runtime_pass)) {
                 // Calling methods to fetch data from the database 
-                first_name = result->getString("f_name");
+                first_name = result->getString("f_name"); //f_name: attribute
                 last_name= result->getString("l_name");
                 email_address = result->getString("email");
                 User::id_number = result->getString("id_num");
@@ -352,7 +355,7 @@ void User::reset_password() {
        // User::password = passw;
         encrypt_password(password);
 
-        //query tobe executed
+        //query to be executed
         string queryUser = "UPDATE user SET password = '" + password + "' WHERE email = '" + emailid + "';";
         stmt = con->createStatement();
         try {
@@ -385,6 +388,7 @@ void User::delete_account() {
     while (x < 7 && confirmation.length() == 7) {
         if (key[x] != confirmation[x]) {
             confirmed = false;
+            break;
         }
         ++x;
     }
@@ -478,119 +482,13 @@ void Question::store_question() {
         exit(1);
     }
 }
-void Question::fetch_question() {
-home:   int num_of_questions;
-    system("CLS");
-    char cat, lev;
-    cout << "   +------ CATEGORY -------+\n";
-    cout << "   |    A. Science         |\n";
-    cout << "   |    B. Technology      |\n";
-    cout << "   |    C. General         |\n";
-    cout << "   |    D. Sport           |\n";
-    cout << "   +-----------------------+\n";
-    cout << "-- "; cin >> cat;
-    system("CLS");
-h2: cout << "  +------ LEVEL -----+\n";
-    cout << "  |    A. Easy       |\n";
-    cout << "  |    B. Medium     |\n";
-    cout << "  |    C. Hard       |\n";
-    cout << "  +------------------+\n";
-    cout << "-- "; cin >> lev; lev = toupper(lev); cat = toupper(cat);
-    system("CLS");
-    string category, level;
-    switch (cat) {
-    case 'A': category = "Science"; break;
-    case 'B': category = "Technology"; break;
-    case 'C': category = "General"; break;
-    case 'D': category = "Sport"; break;
-    default: cout << "Invalid input! "; goto home;
-    }
-    switch (lev) {
-    case 'A': level = "Easy"; break;
-    case 'B': level = "Medium"; break;
-    case 'C': level = "Hard"; break;
-    default: cout << "Invalid input! "; goto h2;
-    }
-
-    cout << "-- Number of question <= 10 -- "; back: cin >> num_of_questions; 
-    if (num_of_questions > 10 || num_of_questions <= 0) {
-        cout << "ENTER VALID INPUT: "; goto back;
-    }
-    stmt = con->createStatement();
-    string query1 = "SELECT * FROM question WHERE quest_num <= " + to_string(num_of_questions) + " AND category = '" + category + "' AND level = '" + level + "';";
-
-    string line; int n;
-    try {
-        result = stmt->executeQuery(query1);
-        while (result->next()) {
-            n = result->getInt("quest_num"); question_number.push_back(n);
-            line = result->getString("quest"); quest.push_back(line);
-            line = result->getString("choice_a"); choice_a.push_back(line);
-            line = result->getString("choice_b"); choice_b.push_back(line);
-            line = result->getString("choice_c"); choice_c.push_back(line);
-            line = result->getString("choice_d"); choice_d.push_back(line);
-            n = result->getInt("correct_ans"); correct_answer.push_back(char(n));
-        }
-        display_question(num_of_questions);
-        delete stmt;
-        delete result;
-    }
-    catch (sql::SQLException& e) {
-        // Handle database errors
-        std::cerr << "Database error: " << e.what() << std::endl;
-    }
-}
-void Question::display_question(int noq) {
-    system("CLS");
-    int j = 0;
-    char userInput;
-    int correct = 0;
-    cout << "      Let's go! The timer has started\n";
-    auto start = std::chrono::high_resolution_clock::now();
-    for (int i = 0; i < noq; ++i) {
-        cout << question_number[i] << ". " << quest[i] << endl;
-        cout << "  " << choice_a[j] << endl;
-        cout << "  " << choice_b[j] << endl;
-        cout << "  " << choice_c[j] << endl;
-        cout << "  " << choice_d[j] << endl;
-        ++j;
-        cout << "Answer: "; cin >> userInput;
-        if (toupper(userInput) == correct_answer[i]) {
-            cout << "Correct!\n";
-            ++correct;
-        }
-        else {
-            cout << "Incorrect! Answer: " << correct_answer[i] << endl;
-        }
-        cout << "Press any key to continue \n";
-        system("pause>0");
-        system("CLS");
-    }
-    auto end = std::chrono::high_resolution_clock::now();
-    chrono::duration<double> duration = end - start;
-    double timeElapsed = duration.count();
-
-    system("CLS");
-    cout << "+------------------------------+\n";
-    cout << "Score: " << correct << "/" << noq << " : ";
-    if (float(correct) / noq >= 0.5)cout << "You did good!\n";
-    else cout << "You should work hard!\n";
-    cout << "Time taken: " << timeElapsed << "secs" << endl;
-    cout << "+------------------------------+\n";
-    question_number.clear();
-    quest.clear();
-    choice_a.clear();
-    choice_b.clear();
-    choice_c.clear();
-    choice_d.clear();
-}
-
 void Question::write_to_the_database() {
     //Opening the required text file to copy data to the database
     ifstream qFile;
     category = "Science";
     level = "Easy"; qFile.open("questionBank/sciEasy.txt", ios::_Nocreate);
     prprdstmt_insertion(qFile, category, level);
+
     level = "Medium"; qFile.open("questionBank/sciMedium.txt", ios::_Nocreate);
     prprdstmt_insertion(qFile, category, level);
     level = "Hard"; qFile.open("questionBank/sciHard.txt", ios::_Nocreate);
@@ -660,6 +558,112 @@ void Question::prprdstmt_insertion(ifstream& qFile, string categ, string level) 
         system("pause");
         exit(1);
     }
+}
+void Question::fetch_question() {
+home:   int num_of_questions;
+    system("CLS");
+    char cat, lev;
+    cout << "   +------ CATEGORY -------+\n";
+    cout << "   |    A. Science         |\n";
+    cout << "   |    B. Technology      |\n";
+    cout << "   |    C. General         |\n";
+    cout << "   |    D. Sport           |\n";
+    cout << "   +-----------------------+\n";
+    cout << "-- "; cin >> cat;
+    system("CLS");
+h2: cout << "  +------ LEVEL -----+\n";
+    cout << "  |    A. Easy       |\n";
+    cout << "  |    B. Medium     |\n";
+    cout << "  |    C. Hard       |\n";
+    cout << "  +------------------+\n";
+    cout << "-- "; cin >> lev; lev = toupper(lev); cat = toupper(cat);
+    system("CLS");
+    string category, level;
+    switch (cat) {
+    case 'A': category = "Science"; break;
+    case 'B': category = "Technology"; break;
+    case 'C': category = "General"; break;
+    case 'D': category = "Sport"; break;
+    default: cout << "Invalid input! "; goto home;
+    }
+    switch (lev) {
+    case 'A': level = "Easy"; break;
+    case 'B': level = "Medium"; break;
+    case 'C': level = "Hard"; break;
+    default: cout << "Invalid input! "; goto h2;
+    }
+
+    cout << "-- Number of question <= 10 -- "; back: cin >> num_of_questions; 
+    if (num_of_questions > 10 || num_of_questions <= 0) {
+        cout << "ENTER VALID INPUT: "; goto back;
+    }
+    stmt = con->createStatement();
+    string query1 = "SELECT * FROM question WHERE quest_num <= " + to_string(num_of_questions) + " AND category = '" + category + "' AND level = '" + level + "';";
+
+    string line; int n;
+    try {
+        result = stmt->executeQuery(query1);
+        while (result->next()) {
+            n = result->getInt("quest_num"); question_number.push_back(n);
+            line = result->getString("quest"); quest.push_back(line);
+            line = result->getString("choice_a"); choice_a.push_back(line);
+            line = result->getString("choice_b"); choice_b.push_back(line);
+            line = result->getString("choice_c"); choice_c.push_back(line);
+            line = result->getString("choice_d"); choice_d.push_back(line);
+            n = result->getInt("correct_ans"); correct_answer.push_back(char(n));
+        }
+        display_question(num_of_questions);
+        delete stmt;
+        delete result;
+    }
+    catch (sql::SQLException& e) {
+        // Handle database errors
+        std::cerr << "Database error: " << e.what() << std::endl;
+    }
+}
+void Question::display_question(int noq) {
+    system("CLS");
+    int j = 0;
+    char userInput;
+    int correct = 0;
+    cout << "      Let's go! The timer has started\n";
+    auto start = std::chrono::high_resolution_clock::now(); //timer
+    for (int i = 0; i < noq; ++i) {
+        cout << question_number[i] << ". " << quest[i] << endl;
+        cout << "  " << choice_a[j] << endl;
+        cout << "  " << choice_b[j] << endl;
+        cout << "  " << choice_c[j] << endl;
+        cout << "  " << choice_d[j] << endl;
+        ++j;
+        cout << "Answer: "; cin >> userInput;
+        if (toupper(userInput) == correct_answer[i]) {
+            cout << "Correct!\n";
+            ++correct;
+        }
+        else {
+            cout << "Incorrect! Answer: " << correct_answer[i] << endl;
+        }
+        cout << "Press any key to continue \n";
+        system("pause>0");
+        system("CLS");
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = end - start;
+    double timeElapsed = duration.count();
+
+    system("CLS");
+    cout << "+------------------------------+\n";
+    cout << "Score: " << correct << "/" << noq << " : ";
+    if (float(correct) / noq >= 0.5)cout << "You did good!\n";
+    else cout << "You should work hard!\n";
+    cout << "Time taken: " << timeElapsed << "secs" << endl;
+    cout << "+------------------------------+\n";
+    question_number.clear();
+    quest.clear();
+    choice_a.clear();
+    choice_b.clear();
+    choice_c.clear();
+    choice_d.clear();
 }
 
 void about_us() {
